@@ -6,21 +6,25 @@ const initialState = {
   loading: false,
   error: null,
   searchQuery: '',
-  operationLoading: false, // For add/update/delete operations
+  operationLoading: false,
   operationSuccess: false,
+  // Pagination state
+  currentPage: 1,
+  totalPages: 1,
+  totalCount: 0,
+  pageSize: 10,
+  hasNextPage: false,
+  hasPreviousPage: false,
 };
-
-// Async thunks for book operations
-// These will be called from components and handle all the logic
 
 export const fetchBooks = createAsyncThunk(
   'books/fetchBooks',
-  async ({ apolloClient, search = '' }, { rejectWithValue }) => {
+  async ({ apolloClient, search = '', page = 1, limit = 10 }, { rejectWithValue }) => {
     try {
       const { GET_BOOKS, SEARCH_BOOKS } = await import('@/lib/queries');
       const { data } = await apolloClient.query({
         query: search ? SEARCH_BOOKS : GET_BOOKS,
-        variables: search ? { search } : {},
+        variables: search ? { search, page, limit } : { page, limit },
         fetchPolicy: 'network-only',
       });
       return search ? data.searchBooks : data.books;
@@ -119,32 +123,34 @@ const booksSlice = createSlice({
   name: 'books',
   initialState,
   reducers: {
-    // Set search query
     setSearchQuery: (state, action) => {
       state.searchQuery = action.payload;
     },
-    
-    // Clear error
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
+    setPageSize: (state, action) => {
+      state.pageSize = action.payload;
+      state.currentPage = 1;
+    },
     clearError: (state) => {
       state.error = null;
     },
-    
-    // Clear operation success
     clearOperationSuccess: (state) => {
       state.operationSuccess = false;
     },
-    
-    // Clear all books (on logout)
     clearBooks: (state) => {
       state.books = [];
       state.currentBook = null;
       state.searchQuery = '';
       state.error = null;
       state.operationSuccess = false;
+      state.currentPage = 1;
+      state.totalPages = 1;
+      state.totalCount = 0;
     },
   },
   extraReducers: (builder) => {
-    // Fetch Books
     builder
       .addCase(fetchBooks.pending, (state) => {
         state.loading = true;
@@ -152,7 +158,16 @@ const booksSlice = createSlice({
       })
       .addCase(fetchBooks.fulfilled, (state, action) => {
         state.loading = false;
-        state.books = action.payload;
+        if (action.payload.books) {
+          state.books = action.payload.books;
+          state.totalCount = action.payload.totalCount || 0;
+          state.totalPages = action.payload.totalPages || 1;
+          state.currentPage = action.payload.currentPage || 1;
+          state.hasNextPage = action.payload.hasNextPage || false;
+          state.hasPreviousPage = action.payload.hasPreviousPage || false;
+        } else {
+          state.books = action.payload;
+        }
       })
       .addCase(fetchBooks.rejected, (state, action) => {
         state.loading = false;
@@ -241,6 +256,8 @@ const booksSlice = createSlice({
 
 export const {
   setSearchQuery,
+  setCurrentPage,
+  setPageSize,
   clearError,
   clearOperationSuccess,
   clearBooks,

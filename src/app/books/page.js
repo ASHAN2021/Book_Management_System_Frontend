@@ -10,7 +10,7 @@ import {
 import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import { initializeAuth } from '@/store/authSlice';
-import { fetchBooks, setSearchQuery, clearError } from '@/store/booksSlice';
+import { fetchBooks, setSearchQuery, setCurrentPage, setPageSize, clearError } from '@/store/booksSlice';
 import styles from './booksList.module.css';
 
 export default function BooksList() {
@@ -19,7 +19,18 @@ export default function BooksList() {
   const apolloClient = useApolloClient();
   
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const { books, searchQuery, loading, error } = useSelector((state) => state.books);
+  const { 
+    books, 
+    searchQuery, 
+    loading, 
+    error,
+    currentPage,
+    totalPages,
+    totalCount,
+    pageSize,
+    hasNextPage,
+    hasPreviousPage
+  } = useSelector((state) => state.books);
   
   const [isSearching, setIsSearching] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -39,9 +50,14 @@ export default function BooksList() {
 
     if (isClient && isAuthenticated) {
       dispatch(clearError());
-      dispatch(fetchBooks({ apolloClient, search: isSearching ? searchQuery : '' }));
+      dispatch(fetchBooks({ 
+        apolloClient, 
+        search: isSearching ? searchQuery : '',
+        page: currentPage,
+        limit: pageSize
+      }));
     }
-  }, [isClient, isAuthenticated, isSearching, searchQuery, dispatch, apolloClient]);
+  }, [isClient, isAuthenticated, isSearching, searchQuery, currentPage, pageSize, dispatch, apolloClient]);
 
 
   if (!isClient) {
@@ -60,6 +76,7 @@ export default function BooksList() {
   const handleSearch = () => {
     if (searchQuery.trim()) {
       setIsSearching(true);
+      dispatch(setCurrentPage(1)); // Reset to first page on new search
     } else {
       setIsSearching(false);
     }
@@ -68,6 +85,16 @@ export default function BooksList() {
   const handleClearSearch = () => {
     dispatch(setSearchQuery(''));
     setIsSearching(false);
+    dispatch(setCurrentPage(1)); // Reset to first page
+  };
+
+  const handlePageChange = (newPage) => {
+    dispatch(setCurrentPage(newPage));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePageSizeChange = (event) => {
+    dispatch(setPageSize(Number(event.target.value)));
   };
 
   return (
@@ -153,6 +180,83 @@ export default function BooksList() {
         </Table>
       </TableContainer>
 
+
+      {/* Pagination Controls */}
+      {!loading && books.length > 0 && (
+        <div className={styles.paginationContainer}>
+          <div className={styles.paginationInfo}>
+            Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, totalCount)} of {totalCount} books
+          </div>
+          
+          <div className={styles.paginationControls}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={!hasPreviousPage || loading}
+              className={styles.pageButton}
+            >
+              Previous
+            </Button>
+            
+            <div className={styles.pageNumbers}>
+              {[...Array(totalPages)].map((_, index) => {
+                const pageNum = index + 1;
+                // Show first page, last page, current page, and pages around current
+                if (
+                  pageNum === 1 ||
+                  pageNum === totalPages ||
+                  (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                ) {
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={pageNum === currentPage ? 'contained' : 'outlined'}
+                      color="primary"
+                      onClick={() => handlePageChange(pageNum)}
+                      disabled={loading}
+                      className={pageNum === currentPage ? styles.activePageButton : styles.pageButton}
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                } else if (
+                  pageNum === currentPage - 2 ||
+                  pageNum === currentPage + 2
+                ) {
+                  return <span key={pageNum} className={styles.pageEllipsis}>...</span>;
+                }
+                return null;
+              })}
+            </div>
+            
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={!hasNextPage || loading}
+              className={styles.pageButton}
+            >
+              Next
+            </Button>
+          </div>
+          
+          <div className={styles.pageSizeSelector}>
+            <label htmlFor="pageSize">Items per page:</label>
+            <select 
+              id="pageSize"
+              value={pageSize} 
+              onChange={handlePageSizeChange}
+              className={styles.pageSizeSelect}
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </div>
+      )}
 
       <Button
         variant="contained"

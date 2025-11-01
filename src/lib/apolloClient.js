@@ -9,8 +9,6 @@ const httpLink = new HttpLink({
   fetchOptions: {
     mode: "cors",
   },
-  // express-graphql compatibility: Don't throw on 400/500 status codes
-  // Let Apollo Client parse the GraphQL errors from the response body
   fetch: (uri, options) => {
     return fetch(uri, options).then(response => {
       // Always try to parse as JSON, even on error status codes
@@ -37,8 +35,7 @@ const httpLink = new HttpLink({
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
-  // Errors are already handled in Redux slices
-  // This is just for debugging if needed
+  // Errors are already handled in Redux slices. This is just for debugging if needed
   if (process.env.NODE_ENV === 'development') {
     if (graphQLErrors) {
       graphQLErrors.forEach(({ message }) => {
@@ -72,7 +69,7 @@ function createApolloClient() {
 }
 
 export function initializeApollo() {
-  if (typeof window === "undefined") return createApolloClient(); // SSR
-  if (!client) client = createApolloClient(); // CSR singleton
+  if (typeof window === "undefined") return createApolloClient();
+  if (!client) client = createApolloClient(); // singleton
   return client;
 }

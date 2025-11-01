@@ -1,25 +1,39 @@
 import { gql } from '@apollo/client';
 
 export const GET_BOOKS = gql`
-  query Books {
-    books {
-      id
-      title
-      author
-      publishedYear
-      genre
+  query Books($page: Int, $limit: Int) {
+    books(page: $page, limit: $limit) {
+      books {
+        id
+        title
+        author
+        publishedYear
+        genre
+      }
+      totalCount
+      totalPages
+      currentPage
+      hasNextPage
+      hasPreviousPage
     }
   }
 `;
 
 export const SEARCH_BOOKS = gql`
-  query SearchBooks($search: String!) {
-    searchBooks(search: $search) {
-      id
-      title
-      author
-      publishedYear
-      genre
+  query SearchBooks($search: String!, $page: Int, $limit: Int) {
+    searchBooks(search: $search, page: $page, limit: $limit) {
+      books {
+        id
+        title
+        author
+        publishedYear
+        genre
+      }
+      totalCount
+      totalPages
+      currentPage
+      hasNextPage
+      hasPreviousPage
     }
   }
 `;
