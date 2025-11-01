@@ -1,0 +1,128 @@
+/* Same styles as login page for consistency */
+
+/* Container customization */
+.container {
+  margin-top: 5rem;
+  margin-bottom: 3rem;
+}
+
+/* Paper customization */
+.paper {
+  padding: 3rem !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  background: white !important;
+}
+
+/* Title customization */
+.title {
+  font-weight: 700 !important;
+  color: #1976d2 !important;
+  margin-bottom: 2rem !important;
+  text-align: center;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* TextField customization */
+.textField {
+  margin-bottom: 0 !important;
+}
+
+.textField label {
+  font-weight: 500;
+}
+
+.textField input {
+  font-size: 1rem;
+}
+
+/* Submit button customization */
+.submitButton {
+  margin-top: 0.5rem !important;
+  padding: 12px !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.submitButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(25, 118, 210, 0.3) !important;
+}
+
+.submitButton:disabled {
+  transform: none;
+}
+
+/* Error alert customization */
+.error {
+  margin-top: 1.5rem !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+
+/* Login link button */
+.loginButton {
+  margin-top: 1.5rem !important;
+  padding: 10px !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  color: #1976d2 !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+.loginButton:hover {
+  background-color: rgba(25, 118, 210, 0.04) !important;
+}
+
+/* Divider text */
+.divider {
+  text-align: center;
+  margin: 1.5rem 0 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: #ddd;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .container {
+    margin-top: 3rem;
+  }
+
+  .paper {
+    padding: 2rem !important;
+  }
+
+  .title {
+    font-size: 1.75rem !important;
+  }
+}

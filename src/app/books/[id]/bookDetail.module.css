@@ -1,0 +1,75 @@
+/* Container customization */
+.container {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Paper customization */
+.paper {
+  padding: 2.5rem !important;
+  border-radius: 12px !important;
+}
+
+/* Title customization */
+.title {
+  font-weight: 700 !important;
+  color: #1976d2 !important;
+  margin-bottom: 1.5rem !important;
+  letter-spacing: -0.02em;
+}
+
+/* Author info customization */
+.authorInfo {
+  color: #666 !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.authorInfo strong {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Genre chip customization */
+.genreChip {
+  margin-bottom: 2rem !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  font-size: 0.95rem !important;
+}
+
+/* Button group */
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Button customization */
+.button {
+  min-width: 140px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  border-radius: 8px !important;
+  padding: 10px 24px !important;
+  transition: all 0.3s ease !important;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Loading state */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* Error alert customization */
+.error {
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
