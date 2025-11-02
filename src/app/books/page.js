@@ -76,7 +76,7 @@ export default function BooksList() {
   const handleSearch = () => {
     if (searchQuery.trim()) {
       setIsSearching(true);
-      dispatch(setCurrentPage(1)); // Reset to first page on new search
+      dispatch(setCurrentPage(1));
     } else {
       setIsSearching(false);
     }
@@ -85,7 +85,7 @@ export default function BooksList() {
   const handleClearSearch = () => {
     dispatch(setSearchQuery(''));
     setIsSearching(false);
-    dispatch(setCurrentPage(1)); // Reset to first page
+    dispatch(setCurrentPage(1));
   };
 
   const handlePageChange = (newPage) => {
@@ -202,7 +202,6 @@ export default function BooksList() {
             <div className={styles.pageNumbers}>
               {[...Array(totalPages)].map((_, index) => {
                 const pageNum = index + 1;
-                // Show first page, last page, current page, and pages around current
                 if (
                   pageNum === 1 ||
                   pageNum === totalPages ||

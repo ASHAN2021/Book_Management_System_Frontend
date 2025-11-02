@@ -22,7 +22,6 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     setMounted(true);
-    // Initialize auth state from localStorage on mount
     dispatch(initializeAuth());
   }, [dispatch]);
 
