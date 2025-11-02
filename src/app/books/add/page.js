@@ -72,6 +72,7 @@ export default function AddBook() {
             onChange={(e) => setForm({ ...form, publishedYear: e.target.value })}
             className={styles.textField}
             required
+            inputProps={{ min: 1800 }}
           />
           <TextField
             fullWidth

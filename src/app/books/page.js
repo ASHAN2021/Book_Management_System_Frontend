@@ -187,7 +187,7 @@ export default function BooksList() {
           <div className={styles.paginationInfo}>
             Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, totalCount)} of {totalCount} books
           </div>
-          
+
           <div className={styles.paginationControls}>
             <Button
               variant="outlined"
@@ -198,7 +198,7 @@ export default function BooksList() {
             >
               Previous
             </Button>
-            
+
             <div className={styles.pageNumbers}>
               {[...Array(totalPages)].map((_, index) => {
                 const pageNum = index + 1;
@@ -228,7 +228,7 @@ export default function BooksList() {
                 return null;
               })}
             </div>
-            
+
             <Button
               variant="outlined"
               color="primary"
@@ -239,7 +239,7 @@ export default function BooksList() {
               Next
             </Button>
           </div>
-          
+
           <div className={styles.pageSizeSelector}>
             <label htmlFor="pageSize">Items per page:</label>
             <select 
